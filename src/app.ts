@@ -1,9 +1,10 @@
-import { routes } from './routes';
-import { userController } from './controllers/user-controller';
-import { dbConnector } from './db-connector';
 import * as dotenv from 'dotenv'
 dotenv.config()
 import express from 'express';
+
+import { routes } from './routes';
+import { userController } from './controllers/user-controller';
+import { dbConnector } from './db-connector';
 
 const app = express();
 const port = 3000;
