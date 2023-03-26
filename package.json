@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "build": "tsc"
+    "build": "npx tsc"
   },
   "keywords": [],
   "author": "",
