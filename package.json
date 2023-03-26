@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "build:render": "npm i && npm run build"
   },
   "keywords": [],
   "author": "",
