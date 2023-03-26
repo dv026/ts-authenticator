@@ -1,12 +1,14 @@
 import { routes } from './routes';
 import { userController } from './controllers/user-controller';
 import { dbConnector } from './db-connector';
+import * as dotenv from 'dotenv'
+dotenv.config()
 import express from 'express';
 
 const app = express();
 const port = 3000;
 
-const url = 'mongodb+srv://admin:ySHbVCNgAUe5BB5V@claster1.zhallab.mongodb.net/?retryWrites=true&w=majority';
+const url = process.env.MONGODB_URL;
 
 // get body from request
 app.use(express.json())
