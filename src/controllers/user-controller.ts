@@ -7,7 +7,7 @@ import { UserAlreadyExists, UserNotFound, IncorrectPassword } from '../errors'
 import { dbConnector } from '../db-connector';
 import { JwtMalformed } from '../errors/jwr-malformed';
 
-const saltOrRounds = 10
+const saltOrRounds = process.env.PASSWORD_SALT
 
 class UserController {
   constructor() {}
