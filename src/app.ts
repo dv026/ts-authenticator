@@ -1,5 +1,7 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
+var cors = require('cors')
+
 import express from 'express';
 
 import { routes } from './routes';
@@ -11,6 +13,8 @@ const port = 3000;
 
 const url = process.env.MONGODB_URL;
 
+// to allow every origin to connect
+app.use(cors())
 // get body from request
 app.use(express.json())
 
