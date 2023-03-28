@@ -1,6 +1,5 @@
 import { UserModel } from './models/user';
-import { MongoClient, Document, Collection } from 'mongodb'
-import { IUser } from './types/user';
+import { MongoClient, Collection } from 'mongodb'
 
 class DbConnector {
   mongoclient: MongoClient
@@ -8,6 +7,7 @@ class DbConnector {
 
   async connect(url: string) {
     this.mongoclient = new MongoClient(url);
+    console.log({ url })
     await this.mongoclient.connect();
 
     this.users = this.mongoclient.db('authenticator').collection('users')

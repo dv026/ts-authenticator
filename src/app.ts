@@ -53,12 +53,16 @@ app.get(routes.user.checkAuth, async (req, res) => {
 
 app.listen(port, async () => {
   await dbConnector.connect(url)
+  console.log('server started')
 });
 
 
 // login работает
 // registration работает
 // check-auth работает
+
+// не работает registraiton from render
+// findOne of undefined
 
 // добавить остальные методы
 // разобраться с ролями
