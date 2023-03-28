@@ -7,7 +7,7 @@ import { UserAlreadyExists, UserNotFound, IncorrectPassword } from '../errors'
 import { dbConnector } from '../db-connector';
 import { JwtMalformed } from '../errors/jwr-malformed';
 
-const saltOrRounds = process.env.PASSWORD_SALT
+const saltRounds = parseInt(process.env.PASSWORD_SALT_ROUNDS)
 
 class UserController {
   constructor() {}
@@ -16,16 +16,21 @@ class UserController {
     try {
     const user = await dbConnector.users.findOne({ login })
 
-    if (user) {
-      throw new UserAlreadyExists()
+    if (user !== null) {
+      const error = new UserAlreadyExists()
+      console.log({ UserAlreadyExists: error })
+      throw error
     }
 
-    const passwordHash = await hash(password, saltOrRounds)
+    console.log({ salt: saltRounds})
+    const passwordHash = await hash(password, saltRounds)
 
-    await dbConnector.users.insertOne({
+    const added = await dbConnector.users.insertOne({
       login,
       passwordHash,
     })
+
+    console.log({ added })
 
     const accessToken = tokenService.create({ user: { login }}, '1h')
     const refreshToken = tokenService.create({ user: { login }}, '24h')
@@ -34,6 +39,7 @@ class UserController {
       login
     }}
   } catch(e) {
+    console.log({ newError: e })
     throw new Error(e)
   }
   }

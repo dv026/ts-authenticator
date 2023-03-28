@@ -24,7 +24,9 @@ app.post(routes.user.registration, async (req, res) => {
     const user = await userController.registration({ login, password})
     return res.json(user)
   } catch (e) {
-    return res.json(e)
+    return res.status(400).send({ 
+      message: e.message
+    })
   }
 });
 
@@ -34,7 +36,9 @@ app.post(routes.user.login, async (req, res) => {
     const user = await userController.login({ login, password})
     return res.json(user)
   } catch (e) {
-    return res.json(e)
+    return res.status(400).send({ 
+      message: e.message
+    })
   }
 })
 
@@ -50,3 +54,11 @@ app.get(routes.user.checkAuth, async (req, res) => {
 app.listen(port, async () => {
   await dbConnector.connect(url)
 });
+
+
+// login работает
+// registration работает
+// check-auth работает
+
+// добавить остальные методы
+// разобраться с ролями
