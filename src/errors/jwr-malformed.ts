@@ -1,6 +1,6 @@
 export class JwtMalformed extends Error {
-  constructor() {
-    super('jwr mafformed')
+  constructor(message?: string) {
+    super('jwr mafformed' + message && ' ' + message)
     this.name = 'JwtMalformed'
   }
 }

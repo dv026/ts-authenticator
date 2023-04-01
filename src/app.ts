@@ -51,6 +51,26 @@ app.get(routes.user.checkAuth, async (req, res) => {
   }
 })
 
+app.post(routes.user.forgotPassword, async (req, res) => {
+  const { login } = req.body
+  try {
+    await userController.forgotPassword({ login })
+    res.json({ message: 'Email\'s been sent to your email'})
+  } catch (e) {
+    return res.json(e)
+  }
+})
+
+app.post(routes.user.resetPassword, async (req, res) => {
+  const { token, newPassword } = req.body
+  try {
+    await userController.resetPassword({ token, newPassword })
+    res.json('Password\'s been successfully changed')
+  } catch (e) {
+    throw new Error(e)
+  }
+})
+
 app.listen(port, async () => {
   await dbConnector.connect(url)
   console.log('server started')
@@ -60,9 +80,6 @@ app.listen(port, async () => {
 // login работает
 // registration работает
 // check-auth работает
-
-// не работает registraiton from render
-// findOne of undefined
 
 // добавить остальные методы
 // разобраться с ролями

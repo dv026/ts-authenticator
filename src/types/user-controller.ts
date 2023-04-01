@@ -3,5 +3,6 @@ export interface RegistrationOrLoginResponse {
   refreshToken: string
   user: {
     login: string
+    roles: string[]
   }
 }
