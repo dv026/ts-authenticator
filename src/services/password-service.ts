@@ -1,5 +1,5 @@
-import bcrypt, { compare, hash } from 'bcrypt'
-import { tokenService } from "./token-service"
+import { compare, hash } from 'bcrypt'
+
 
 const saltRounds = parseInt(process.env.PASSWORD_SALT_ROUNDS)
 
@@ -7,6 +7,7 @@ class PasswordService {
   constructor() {}
 
   async hash(password: string) {
+    console.log({ password, saltRounds })
     return hash(password, saltRounds)
   }
 
