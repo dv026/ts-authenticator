@@ -20,8 +20,10 @@ app.use(express.json())
 
 app.post(routes.user.registration, async (req, res) => {
   const { login, password } = req.body
+  console.log('route')
+  console.log({ login, password })
   try {
-    const user = await userController.registration({ login, password})
+    const user = await userController.registration({ login, password })
     return res.json(user)
   } catch (e) {
     return res.status(400).send({ 
