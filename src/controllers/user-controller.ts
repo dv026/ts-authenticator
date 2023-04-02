@@ -11,6 +11,7 @@ import { ObjectId } from 'mongodb';
 import { createResetLink } from '../utils.ts/get-reset-link';
 import { roleConroller } from './role-controller';
 import { roleService } from '../services/role-servise';
+import base64 from 'base-64'
 
 class UserController {
   constructor() {}
@@ -106,10 +107,10 @@ class UserController {
 
       await dbConnector.tokens.deleteMany({ userId })
       const token = tokenService.create({ userId: userId }, '1h')
+      const base64Token = base64.encode(token)
+      const resetLink = createResetLink(base64Token)
 
-      const resetLink = createResetLink(token)
-
-      await dbConnector.tokens.insertOne({ userId, token })
+      await dbConnector.tokens.insertOne({ userId, token: base64Token })
 
       return emailService.send({
         to: login,
@@ -123,13 +124,14 @@ class UserController {
 
   async resetPassword({ token, newPassword }: { token: string, newPassword: string }) {
     try {
-      const { userId } = tokenService.verify(token) as { userId: string }
+      const decodedToken = base64.decode(token)
+      const { userId } = tokenService.verify(decodedToken) as { userId: string }
 
       const tokenEntity = await dbConnector.tokens.findOne({ userId, token })
       
       if (tokenEntity.token === token) {
         //remove all other tokens
-        await dbConnector.tokens.deleteMany({ userId })
+        // await dbConnector.tokens.deleteMany({ userId })
 
         const passwordHash = await passwordService.hash(newPassword)
         return await dbConnector.users.updateOne({ "_id": new ObjectId(userId)}, {
