@@ -9,7 +9,6 @@ import { JwtMalformed } from '../errors/jwr-malformed';
 import { passwordService } from '../services/password-service';
 import { ObjectId } from 'mongodb';
 import { createResetLink } from '../utils.ts/get-reset-link';
-import { roleConroller } from './role-controller';
 import { roleService } from '../services/role-servise';
 import base64 from 'base-64'
 
@@ -130,9 +129,6 @@ class UserController {
       const tokenEntity = await dbConnector.tokens.findOne({ userId, token })
       
       if (tokenEntity.token === token) {
-        //remove all other tokens
-        // await dbConnector.tokens.deleteMany({ userId })
-
         const passwordHash = await passwordService.hash(newPassword)
         return await dbConnector.users.updateOne({ "_id": new ObjectId(userId)}, {
           $set: {

@@ -7,6 +7,7 @@ import express from 'express';
 import { routes } from './routes';
 import { userController } from './controllers/user-controller';
 import { dbConnector } from './db-connector';
+import { adminConroller } from './controllers/admin-controller';
 
 const app = express();
 const port = 3000;
@@ -68,6 +69,15 @@ app.post(routes.user.resetPassword, async (req, res) => {
   try {
     await userController.resetPassword({ token, newPassword })
     res.json('Password\'s been successfully changed')
+  } catch (e) {
+    throw new Error(e)
+  }
+})
+
+app.get(routes.admin.users, async (req, res) => {
+  try {
+    const users = await adminConroller.getUsers()
+    res.json(users)
   } catch (e) {
     throw new Error(e)
   }
