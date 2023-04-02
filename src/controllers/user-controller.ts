@@ -109,6 +109,7 @@ class UserController {
 
       await dbConnector.tokens.insertOne({ userId, token })
 
+      console.log({ login })
       return emailService.send({
         to: login,
         subject: 'Reset Password',
