@@ -110,7 +110,7 @@ class UserController {
       await dbConnector.tokens.insertOne({ userId, token })
 
       return emailService.send({
-        to: 'dimavas026@yandex.ru',
+        to: login,
         subject: 'Reset Password',
         text: `To reset your password follow this link - ${resetLink}`
       })
@@ -124,8 +124,11 @@ class UserController {
       const { userId } = tokenService.verify(token) as { userId: string }
 
       const tokenEntity = await dbConnector.tokens.findOne({ userId, token })
-
+      
       if (tokenEntity.token === token) {
+        //remove all other tokens
+        await dbConnector.tokens.deleteMany({ userId })
+
         const passwordHash = await passwordService.hash(newPassword)
         return await dbConnector.users.updateOne({ "_id": new ObjectId(userId)}, {
           $set: {
