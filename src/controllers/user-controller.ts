@@ -103,13 +103,14 @@ class UserController {
       }
 
       const userId = user._id.toString()
+
+      await dbConnector.tokens.deleteMany({ userId })
       const token = tokenService.create({ userId: userId }, '1h')
 
       const resetLink = createResetLink(token)
 
       await dbConnector.tokens.insertOne({ userId, token })
 
-      console.log({ login })
       return emailService.send({
         to: login,
         subject: 'Reset Password',
