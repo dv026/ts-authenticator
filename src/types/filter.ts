@@ -1,4 +1,4 @@
 export interface IFilter {
   currentPage?: number
-  elementsOnPage?: number
+  pageSize?: number
 }

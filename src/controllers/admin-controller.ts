@@ -8,13 +8,13 @@ class AdminController {
 
   async getUsers(filter: IFilter = {
     currentPage: 1,
-    elementsOnPage: 10
+    pageSize: 10
   }) {
     console.log({ filter })
     return await dbConnector.users
     .find()
-    .skip((filter.currentPage - 1) * filter.elementsOnPage)
-    .limit(filter.elementsOnPage)
+    .skip((filter.currentPage - 1) * filter.pageSize)
+    .limit(filter.pageSize)
     .toArray()
   }
 
