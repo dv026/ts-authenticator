@@ -75,8 +75,12 @@ app.post(routes.user.resetPassword, async (req, res) => {
 })
 
 app.get(routes.admin.users, async (req, res) => {
+  const queryParams = req.query
   try {
-    const users = await adminConroller.getUsers()
+    const users = await adminConroller.getUsers({ 
+      elementsOnPage: parseInt(queryParams.elementsPerPage.toString()) || 10,
+      currentPage: parseInt(queryParams.pageNumber.toString()) || 1,
+    })
     res.json(users)
   } catch (e) {
     throw new Error(e)
