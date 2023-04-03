@@ -12,10 +12,13 @@ class AdminController {
   }) {
     console.log({ filter })
     return await dbConnector.users
-    .find()
-    .skip((filter.currentPage - 1) * filter.pageSize)
-    .limit(filter.pageSize)
-    .toArray()
+      .find({
+        roles: { $in: ['user']},
+        login: filter.filter.login,
+      })
+      .skip((filter.currentPage - 1) * filter.pageSize)
+      .limit(filter.pageSize)
+      .toArray()
   }
 
   async getUsersCount() {
