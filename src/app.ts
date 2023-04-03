@@ -81,6 +81,7 @@ app.get(routes.admin.users, async (req, res) => {
     const users = await adminConroller.getUsers({ 
       pageSize: parseInt(queryParams.pageSize.toString()) || 10,
       currentPage: parseInt(queryParams.currentPage.toString()) || 1,
+      filter: JSON.parse(queryParams.filter.toString())
     })
     const totalCount = await adminConroller.getUsersCount()
     res.json({
