@@ -10,6 +10,7 @@ class AdminController {
     currentPage: 1,
     elementsOnPage: 10
   }) {
+    console.log({ filter })
     return await dbConnector.users
     .find()
     .skip((filter.currentPage - 1) * filter.elementsOnPage)
