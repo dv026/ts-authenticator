@@ -17,6 +17,10 @@ class AdminController {
     .limit(filter.elementsOnPage)
     .toArray()
   }
+
+  async getUsersCount() {
+    return await dbConnector.users.estimatedDocumentCount()
+  }
 }
 
 export const adminConroller = new AdminController()
