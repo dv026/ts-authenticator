@@ -69,7 +69,7 @@ app.post(routes.user.resetPassword, async (req, res) => {
     await userController.resetPassword({ token, newPassword })
     res.json('Password\'s been successfully changed')
   } catch (e) {
-    throw new Error(e)
+    res.json({ error: e })
   }
 })
 
