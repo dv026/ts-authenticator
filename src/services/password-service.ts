@@ -7,7 +7,6 @@ class PasswordService {
   constructor() {}
 
   async hash(password: string) {
-    console.log({ password, saltRounds })
     return hash(password, saltRounds)
   }
 

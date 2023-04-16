@@ -127,9 +127,10 @@ class UserController {
       const { userId } = tokenService.verify(decodedToken) as { userId: string }
 
       const tokenEntity = await dbConnector.tokens.findOne({ userId, token })
-      
+
       if (tokenEntity.token === token) {
         const passwordHash = await passwordService.hash(newPassword)
+        await dbConnector.tokens.deleteMany({ userId })
         return await dbConnector.users.updateOne({ "_id": new ObjectId(userId)}, {
           $set: {
             passwordHash

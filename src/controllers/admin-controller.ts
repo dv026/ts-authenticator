@@ -1,28 +1,53 @@
+import { ObjectId } from "mongodb";
 import { dbConnector } from "../db-connector";
-import { IFilter } from "../types/filter";
-
-
+import { IQueryFilterParams } from "../types/query-filter-params";
+import { passwordService } from "../services/password-service";
 
 class AdminController {
   constructor() {}
 
-  async getUsers(filter: IFilter = {
+  async getUsers(queryFilterParams: IQueryFilterParams = {
     currentPage: 1,
-    pageSize: 10
+    pageSize: 10,
+    roles: '',
+    login: ''
   }) {
-    console.log({ filter })
+    const filter = Object.entries(queryFilterParams).filter(([key, value]) => key !== 'pageSize' && key !== 'currentPage' && Boolean(value)).reduce((acc, [key, value]) => ({
+      ...acc,
+      [key]: { $in: JSON.parse(value) }
+    }), {})
     return await dbConnector.users
-      .find({
-        roles: { $in: ['user']},
-        login: filter.filter.login,
-      })
-      .skip((filter.currentPage - 1) * filter.pageSize)
-      .limit(filter.pageSize)
+      .find(filter)
+      .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
+      .limit(queryFilterParams.pageSize)
       .toArray()
   }
 
   async getUsersCount() {
     return await dbConnector.users.estimatedDocumentCount()
+  }
+
+  async deleteUser(id: string) {
+    return await dbConnector.users.deleteOne({ _id: new ObjectId(id)})
+  }
+
+  async getUser(id: string) {
+    return dbConnector.users.findOne({ _id: new ObjectId(id)}, { projection: { passwordHash: 0 }})
+  }
+
+  async deleteUsers(ids: string[]) {
+    const objectIds = ids.map((id) => new ObjectId(id))
+    return await dbConnector.users.deleteMany({ _id: { $in: objectIds }})
+  }
+
+  async createUser({ login, password, roles }) {
+    const passwordHash = await passwordService.hash(password)
+    await dbConnector.users.insertOne({ login, passwordHash, roles })
+  }
+
+  async updateUser({ id, login, password, roles }) {
+    const passwordHash = await passwordService.hash(password)
+    return dbConnector.users.updateOne({ _id: new ObjectId(id) }, { $set: { login, passwordHash, roles }})
   }
 }
 

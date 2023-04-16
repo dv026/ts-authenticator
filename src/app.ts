@@ -8,6 +8,7 @@ import { routes } from './routes';
 import { userController } from './controllers/user-controller';
 import { dbConnector } from './db-connector';
 import { adminConroller } from './controllers/admin-controller';
+import { apiKeysConroller } from './controllers/api-keys-controller';
 
 const app = express();
 const port = 3000;
@@ -21,8 +22,6 @@ app.use(express.json())
 
 app.post(routes.user.registration, async (req, res) => {
   const { login, password } = req.body
-  console.log('route')
-  console.log({ login, password })
   try {
     const user = await userController.registration({ login, password })
     return res.json(user)
@@ -74,14 +73,14 @@ app.post(routes.user.resetPassword, async (req, res) => {
   }
 })
 
-app.get(routes.admin.users, async (req, res) => {
+app.get(routes.admin.users.get, async (req, res) => {
   const queryParams = req.query
-  console.log({ queryParams })
   try {
     const users = await adminConroller.getUsers({ 
       pageSize: parseInt(queryParams.pageSize.toString()) || 10,
       currentPage: parseInt(queryParams.currentPage.toString()) || 1,
-      filter: JSON.parse(queryParams.filter.toString())
+      roles: queryParams.roles as string,
+      login: queryParams.login as string
     })
     const totalCount = await adminConroller.getUsersCount()
     res.json({
@@ -90,6 +89,117 @@ app.get(routes.admin.users, async (req, res) => {
     })
   } catch (e) {
     res.json({ error: e})
+  }
+})
+
+app.delete(routes.admin.user.delete, async (req, res) => {
+  const { id } = req.params
+  try {
+    await adminConroller.deleteUser(id)
+    res.json('User\'s been deleted')
+  } catch (e) {
+    res.json({ error: e })
+  }
+})
+
+app.get(routes.admin.user.get, async (req, res) => {
+  const { id } = req.params
+  try {
+    const user = await adminConroller.getUser(id)
+    res.json(user)
+  } catch (e) {
+    res.json({ error: e })
+  }
+})
+
+app.post(routes.admin.users.delete, async (req, res) => {
+  const { ids } = req.body
+  try {
+    await adminConroller.deleteUsers(ids)
+    res.json('Users\'re been deleted')
+  } catch (e) {
+    res.json({ error: e })
+  }
+})
+
+app.post(routes.admin.user.create, async (req, res) => {
+  const { login, password, roles  } = req.body
+  try {
+    await adminConroller.createUser({ login, password, roles  })
+    res.json('User\'s been created')
+  } catch (e) {
+    res.json({ error: e })
+  }
+})
+
+app.put(routes.admin.user.update, async (req, res) => {
+  const { login, password, roles  } = req.body
+  const { id } = req.params
+  try {
+    const user = await adminConroller.updateUser({ id, login, password, roles })
+    res.json({ user })
+  } catch (e) {
+    res.json({ error: e })
+  }
+})
+
+app.put(routes.admin.apiKey.update, async (req, res) => {
+  const { name  } = req.body
+  const { id } = req.params
+  try {
+    const apiKey = await apiKeysConroller.update(id, name)
+    res.json({ apiKey })
+  } catch (e) {
+    res.json({ error: e })
+  }
+})
+
+app.delete(routes.admin.apiKey.delete, async (req, res) => {
+  const { id } = req.params
+  try {
+    const apiKey = await apiKeysConroller.delete(id)
+    res.json({ apiKey })
+  } catch (e) {
+    res.json({ error: e })
+  }
+})
+
+app.get(routes.admin.apiKey.get, async (req, res) => {
+  const { id } = req.params
+  try {
+    const apiKey = await apiKeysConroller.get(id)
+    res.json({ apiKey })
+  } catch (e) {
+    res.json({ error: e })
+  }
+})
+
+app.post(routes.admin.apiKey.create, async (req, res) => {
+  const { name  } = req.body
+  try {
+    const apiKey = await apiKeysConroller.create(name)
+    res.json({ apiKey })
+  } catch (e) {
+    res.json({ error: e })
+  }
+})
+
+app.post(routes.admin.apiKeys.delete, async (req, res) => {
+  const { ids } = req.body
+  try {
+    const apiKey = await apiKeysConroller.deleteMany(ids)
+    res.json({ apiKey })
+  } catch (e) {
+    res.json({ error: e })
+  }
+})
+
+app.get(routes.admin.apiKeys.get, async (req, res) => {
+  try {
+    const apiKeys = await apiKeysConroller.getAll()
+    res.json(apiKeys)
+  } catch (e) {
+    res.json({ error: e })
   }
 })
 
