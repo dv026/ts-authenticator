@@ -40,9 +40,9 @@ class AdminController {
     return await dbConnector.users.deleteMany({ _id: { $in: objectIds }})
   }
 
-  async createUser({ login, password, roles }) {
+  async createUser({ login, password, roles, apiKey }) {
     const passwordHash = await passwordService.hash(password)
-    await dbConnector.users.insertOne({ login, passwordHash, roles })
+    await dbConnector.users.insertOne({ login, passwordHash, roles, apiKey })
   }
 
   async updateUser({ id, login, password, roles }) {
