@@ -42,6 +42,7 @@ class UserController {
     return { accessToken, refreshToken, user: {
       login,
       roles: userRoles,
+      id: user._id.toString()
     }}
   } catch(e) {
     throw new Error(e)
@@ -67,7 +68,8 @@ class UserController {
   
       return { accessToken, refreshToken, user: {
         login,
-        roles: user.roles
+        roles: user.roles,
+        id: user._id.toString()
       }}
   } catch (e) {
       throw new Error(e)
