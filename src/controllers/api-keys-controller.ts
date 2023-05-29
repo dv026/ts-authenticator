@@ -17,9 +17,9 @@ class ApiKeysController {
     return dbConnector.apiKeys.updateOne({ '_id': new ObjectId(id)}, { $set: { name }})
   }
 
-  async create(name: string) {
+  async create(name: string, userId: string) {
     const apiKey = randomstring.generate(24)
-    return dbConnector.apiKeys.insertOne({ name, value: apiKey })
+    return dbConnector.apiKeys.insertOne({ name, value: apiKey, userId })
   }
 
   async getAll() {

@@ -175,9 +175,9 @@ app.get(routes.admin.apiKey.get, async (req, res) => {
 })
 
 app.post(routes.admin.apiKey.create, async (req, res) => {
-  const { name  } = req.body
+  const { name, userId } = req.body
   try {
-    const apiKey = await apiKeysConroller.create(name)
+    const apiKey = await apiKeysConroller.create(name, userId)
     res.json({ apiKey })
   } catch (e) {
     res.json({ error: e })
