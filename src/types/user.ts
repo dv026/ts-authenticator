@@ -6,5 +6,6 @@ export interface IUser {
 export interface IUserCredentials {
   login: string
   password: string
+  apiKey: string
 }
 

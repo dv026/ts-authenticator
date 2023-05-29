@@ -15,7 +15,7 @@ import base64 from 'base-64'
 class UserController {
   constructor() {}
 
-  async registration ({ login, password }: IUserCredentials): Promise<RegistrationOrLoginResponse> {
+  async registration ({ login, password, apiKey }: IUserCredentials): Promise<RegistrationOrLoginResponse> {
     try {
     const user = await dbConnector.users.findOne({ login })
 
@@ -32,7 +32,8 @@ class UserController {
     await dbConnector.users.insertOne({
       login,
       passwordHash,
-      roles: userRoles
+      roles: userRoles,
+      apiKey,
     })
 
     const accessToken = tokenService.create({ user: { login }}, '1h')

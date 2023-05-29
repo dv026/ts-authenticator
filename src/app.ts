@@ -21,9 +21,9 @@ app.use(cors())
 app.use(express.json())
 
 app.post(routes.user.registration, async (req, res) => {
-  const { login, password } = req.body
+  const { login, password, apiKey } = req.body
   try {
-    const user = await userController.registration({ login, password })
+    const user = await userController.registration({ login, password, apiKey })
     return res.json(user)
   } catch (e) {
     return res.status(400).send({ 
@@ -33,9 +33,9 @@ app.post(routes.user.registration, async (req, res) => {
 });
 
 app.post(routes.user.login, async (req, res) => {
-  const { login, password } = req.body
+  const { login, password, apiKey } = req.body
   try {
-    const user = await userController.login({ login, password})
+    const user = await userController.login({ login, password, apiKey })
     return res.json(user)
   } catch (e) {
     return res.status(400).send({ 
@@ -123,9 +123,9 @@ app.post(routes.admin.users.delete, async (req, res) => {
 })
 
 app.post(routes.admin.user.create, async (req, res) => {
-  const { login, password, roles  } = req.body
+  const { login, password, roles, apiKey } = req.body
   try {
-    await adminConroller.createUser({ login, password, roles  })
+    await adminConroller.createUser({ login, password, roles, apiKey })
     res.json('User\'s been created')
   } catch (e) {
     res.json({ error: e })
