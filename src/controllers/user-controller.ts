@@ -11,6 +11,7 @@ import { ObjectId } from 'mongodb';
 import { createResetLink } from '../utils.ts/get-reset-link';
 import { roleService } from '../services/role-servise';
 import base64 from 'base-64'
+import { apiKeyService } from '../services/api-key-service';
 
 class UserController {
   constructor() {}
@@ -25,9 +26,13 @@ class UserController {
 
     const passwordHash = await passwordService.hash(password)
 
-    const defaultRole = await roleService.getOne({ isDefault: true})
+    const defaultRole = await roleService.getOne({ isDefault: true })
 
     const userRoles = [defaultRole.name]
+
+    if (!apiKeyService.checkApiKey(apiKey)) {
+      throw new Error('API Key does not exist')
+    }
 
     await dbConnector.users.insertOne({
       login,
