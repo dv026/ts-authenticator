@@ -4,6 +4,6 @@ export interface RegistrationOrLoginResponse {
   user: {
     login: string
     roles: string[]
-    id: string
+    _id: string
   }
 }

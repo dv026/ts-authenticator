@@ -42,7 +42,7 @@ class UserController {
     return { accessToken, refreshToken, user: {
       login,
       roles: userRoles,
-      id: user._id.toString()
+      _id: user._id.toString()
     }}
   } catch(e) {
     throw new Error(e)
@@ -63,13 +63,13 @@ class UserController {
         throw new IncorrectPassword()
       }
 
-      const accessToken = tokenService.create({ user: { login, id: user._id }}, '1h')
-      const refreshToken = tokenService.create({ user: { login, id: user._id }}, '24h')
+      const accessToken = tokenService.create({ user: { login, _id: user._id }}, '1h')
+      const refreshToken = tokenService.create({ user: { login, _id: user._id }}, '24h')
   
       return { accessToken, refreshToken, user: {
         login,
         roles: user.roles,
-        id: user._id.toString()
+        _id: user._id.toString()
       }}
   } catch (e) {
       throw new Error(e)
