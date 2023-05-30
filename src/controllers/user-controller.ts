@@ -34,15 +34,15 @@ class UserController {
       throw new Error('API Key does not exist')
     }
 
-    await dbConnector.users.insertOne({
+    const newUser = await dbConnector.users.insertOne({
       login,
       passwordHash,
       roles: userRoles,
       apiKey,
     })
 
-    const accessToken = tokenService.create({ user: { login, _id: user._id }}, '1h')
-    const refreshToken = tokenService.create({ user: { login, _id: user._id }}, '24h')
+    const accessToken = tokenService.create({ user: { login, _id: newUser.insertedId }}, '1h')
+    const refreshToken = tokenService.create({ user: { login, _id: newUser.insertedId }}, '24h')
 
     return { accessToken, refreshToken, user: {
       login,
