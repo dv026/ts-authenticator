@@ -47,7 +47,7 @@ class UserController {
     return { accessToken, refreshToken, user: {
       login,
       roles: userRoles,
-      _id: user._id.toString()
+      _id: newUser.insertedId.toString()
     }}
   } catch(e) {
     throw new Error(e)
