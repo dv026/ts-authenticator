@@ -34,6 +34,7 @@ class UserController {
       throw new Error('API Key does not exist')
     }
 
+    console.log('!!!!', apiKey)
     const newUser = await dbConnector.users.insertOne({
       login,
       passwordHash,

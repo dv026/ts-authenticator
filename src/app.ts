@@ -21,7 +21,9 @@ app.use(cors())
 app.use(express.json())
 
 app.post(routes.user.registration, async (req, res) => {
-  const { login, password, apiKey } = req.body
+  const { login, password } = req.body
+  const headers = req.headers
+  const apiKey = headers['API-KEY'].toString()
   try {
     const user = await userController.registration({ login, password, apiKey })
     return res.json(user)
@@ -75,12 +77,14 @@ app.post(routes.user.resetPassword, async (req, res) => {
 
 app.get(routes.admin.users.get, async (req, res) => {
   const queryParams = req.query
+  const headers = req.headers
   try {
     const users = await adminConroller.getUsers({ 
       pageSize: parseInt(queryParams.pageSize.toString()) || 10,
       currentPage: parseInt(queryParams.currentPage.toString()) || 1,
       roles: queryParams.roles as string,
-      login: queryParams.login as string
+      login: queryParams.login as string,
+      apiKey: queryParams.apiKey as string,
     })
     const totalCount = await adminConroller.getUsersCount()
     res.json({
@@ -211,9 +215,6 @@ app.listen(port, async () => {
 });
 
 
-// login работает
-// registration работает
-// check-auth работает
-
-// добавить остальные методы
 // разобраться с ролями
+
+// сейчас получаем ВСЕХ пользователей, а не по api-key, надо разобраться

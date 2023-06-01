@@ -3,4 +3,5 @@ export interface IQueryFilterParams {
   pageSize?: number
   login?: string
   roles?: string
+  apiKey?: string
 }
