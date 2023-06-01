@@ -23,12 +23,15 @@ app.use(express.json())
 app.post(routes.user.registration, async (req, res) => {
   const { login, password } = req.body
   const headers = req.headers
-  console.log(req)
-  const apiKey = headers['API-KEY']
+  const apiKey = headers['api-key']
   try {
     if (apiKey) {
       const user = await userController.registration({ login, password, apiKey: apiKey.toString() })
       return res.json(user)
+    } else {
+      return res.status(400).send({
+        message: 'there is not API KEY'
+      })
     }
   } catch (e) {
     return res.status(400).send({ 
