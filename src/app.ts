@@ -23,6 +23,7 @@ app.use(express.json())
 app.post(routes.user.registration, async (req, res) => {
   const { login, password } = req.body
   const headers = req.headers
+  console.log(req)
   const apiKey = headers['API-KEY']
   try {
     if (apiKey) {
