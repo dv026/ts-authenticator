@@ -83,7 +83,6 @@ app.post(routes.user.resetPassword, async (req, res) => {
 
 app.get(routes.admin.users.get, async (req, res) => {
   const queryParams = req.query
-  const headers = req.headers
   try {
     const users = await adminConroller.getUsers({ 
       pageSize: parseInt(queryParams.pageSize.toString()) || 10,
@@ -91,6 +90,10 @@ app.get(routes.admin.users.get, async (req, res) => {
       roles: queryParams.roles as string,
       login: queryParams.login as string,
       apiKey: queryParams.apiKey as string,
+      sort: {
+        field: queryParams.sortField,
+        direction: queryParams.sortDirection
+      }
     })
     const totalCount = await adminConroller.getUsersCount()
     res.json({

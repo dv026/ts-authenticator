@@ -14,16 +14,30 @@ class AdminController {
     apiKey: '',
   }) {
     const filter: any = Object.entries(queryFilterParams)
-      .filter(([key, value]) => key !== 'pageSize' && key !== 'currentPage' && Boolean(value))
-      .reduce((acc, [key, value]) => ({
-        ...acc,
-        [key]: { $eq: value }
-    }), {})
+      .filter(([key, value]) => key !== 'pageSize' && key !== 'currentPage' && value !== null && value !== undefined)
+      .reduce((acc, [key, value]) => {
+        let operator
+        if (key === 'roles') {
+          operator = '$in'
+          value = JSON.parse(value)
+        } else {
+          operator = '$eq'
+        }
+        return {
+          ...acc,
+          [key]: { [operator]: value }
+        }
+    }, {})
+
+    const sort = {
+      [queryFilterParams?.sort?.field]: queryFilterParams?.sort?.direction
+    }
 
     return await dbConnector.users
       .find(filter)
       .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
       .limit(queryFilterParams.pageSize)
+      .sort(sort)
       .toArray()
   }
 
