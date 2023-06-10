@@ -1,5 +1,4 @@
 
-import fetch from "node-fetch";
 import axios from 'axios'
 
 class EmailService {

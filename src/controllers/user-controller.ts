@@ -18,40 +18,42 @@ class UserController {
 
   async registration ({ login, password, apiKey }: IUserCredentials): Promise<RegistrationOrLoginResponse> {
     try {
-    const user = await dbConnector.users.findOne({ login })
+      const user = await dbConnector.users.findOne({ login })
 
-    if (user !== null) {
-      throw new UserAlreadyExists()
+      if (user !== null) {
+        console.log('error 1')
+        throw new UserAlreadyExists()
+      }
+
+      const passwordHash = await passwordService.hash(password)
+
+      const defaultRole = await roleService.getOne({ isDefault: true })
+
+      const userRoles = [defaultRole.name]
+
+      if (!apiKeyService.checkApiKey(apiKey)) {
+        throw new Error('API Key does not exist')
+      }
+
+      const newUser = await dbConnector.users.insertOne({
+        login,
+        passwordHash,
+        roles: userRoles,
+        apiKey,
+      })
+
+      const accessToken = tokenService.create({ user: { login, _id: newUser.insertedId }}, '1h')
+      const refreshToken = tokenService.create({ user: { login, _id: newUser.insertedId }}, '24h')
+
+      return { accessToken, refreshToken, user: {
+        login,
+        roles: userRoles,
+        _id: newUser.insertedId.toString()
+      }}
+    } catch(e) {
+      console.log('error 2')
+      throw new Error(e)
     }
-
-    const passwordHash = await passwordService.hash(password)
-
-    const defaultRole = await roleService.getOne({ isDefault: true })
-
-    const userRoles = [defaultRole.name]
-
-    if (!apiKeyService.checkApiKey(apiKey)) {
-      throw new Error('API Key does not exist')
-    }
-
-    const newUser = await dbConnector.users.insertOne({
-      login,
-      passwordHash,
-      roles: userRoles,
-      apiKey,
-    })
-
-    const accessToken = tokenService.create({ user: { login, _id: newUser.insertedId }}, '1h')
-    const refreshToken = tokenService.create({ user: { login, _id: newUser.insertedId }}, '24h')
-
-    return { accessToken, refreshToken, user: {
-      login,
-      roles: userRoles,
-      _id: newUser.insertedId.toString()
-    }}
-  } catch(e) {
-    throw new Error(e)
-  }
   }
 
   async login({ login, password }: IUserCredentials):  Promise<RegistrationOrLoginResponse> {

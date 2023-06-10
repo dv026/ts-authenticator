@@ -34,7 +34,8 @@ app.post(routes.user.registration, async (req, res) => {
       })
     }
   } catch (e) {
-    return res.status(400).send({ 
+    console.log('error cotroller')
+    return res.status(400).send({
       message: e.message
     })
   }
