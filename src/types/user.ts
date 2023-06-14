@@ -8,4 +8,3 @@ export interface IUserCredentials {
   password: string
   apiKey: string
 }
-

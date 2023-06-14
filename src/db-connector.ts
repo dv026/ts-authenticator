@@ -1,6 +1,6 @@
-import { UserModel, TokenModel, RoleModel } from './models';
-import { MongoClient, Collection } from 'mongodb'
-import { ApiKeyModel } from './models/api-key';
+import { UserModel, TokenModel, RoleModel } from "./models"
+import { MongoClient, Collection } from "mongodb"
+import { ApiKeyModel } from "./models/api-key"
 
 class DbConnector {
   mongoclient: MongoClient
@@ -10,13 +10,13 @@ class DbConnector {
   apiKeys: Collection<ApiKeyModel>
 
   async connect(url: string) {
-    this.mongoclient = new MongoClient(url);
-    await this.mongoclient.connect();
+    this.mongoclient = new MongoClient(url)
+    await this.mongoclient.connect()
 
-    this.users = this.mongoclient.db('authenticator').collection('users')
-    this.tokens = this.mongoclient.db('authenticator').collection('tokens')
-    this.roles = this.mongoclient.db('authenticator').collection('roles')
-    this.apiKeys = this.mongoclient.db('authenticator').collection('api-keys')
+    this.users = this.mongoclient.db("authenticator").collection("users")
+    this.tokens = this.mongoclient.db("authenticator").collection("tokens")
+    this.roles = this.mongoclient.db("authenticator").collection("roles")
+    this.apiKeys = this.mongoclient.db("authenticator").collection("api-keys")
   }
 }
 

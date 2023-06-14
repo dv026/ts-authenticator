@@ -1,5 +1,4 @@
-import { compare, hash } from 'bcrypt'
-
+import { compare, hash } from "bcrypt"
 
 const saltRounds = parseInt(process.env.PASSWORD_SALT_ROUNDS)
 

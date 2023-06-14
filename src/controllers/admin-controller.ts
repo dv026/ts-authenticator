@@ -1,36 +1,44 @@
-import { ObjectId } from "mongodb";
-import { dbConnector } from "../db-connector";
-import { IQueryFilterParams } from "../types/query-filter-params";
-import { passwordService } from "../services/password-service";
+import { ObjectId } from "mongodb"
+import { dbConnector } from "../db-connector"
+import { IQueryFilterParams } from "../types/query-filter-params"
+import { passwordService } from "../services/password-service"
 
 class AdminController {
   constructor() {}
 
-  async getUsers(queryFilterParams: IQueryFilterParams = {
-    currentPage: 1,
-    pageSize: 10,
-    roles: '',
-    login: '',
-    apiKey: '',
-  }) {
+  async getUsers(
+    queryFilterParams: IQueryFilterParams = {
+      currentPage: 1,
+      pageSize: 10,
+      roles: "",
+      login: "",
+      apiKey: "",
+    }
+  ) {
     const filter: any = Object.entries(queryFilterParams)
-      .filter(([key, value]) => key !== 'pageSize' && key !== 'currentPage' && value !== null && value !== undefined)
+      .filter(
+        ([key, value]) =>
+          key !== "pageSize" &&
+          key !== "currentPage" &&
+          value !== null &&
+          value !== undefined
+      )
       .reduce((acc, [key, value]) => {
         let operator
-        if (key === 'roles') {
-          operator = '$in'
+        if (key === "roles") {
+          operator = "$in"
           value = JSON.parse(value)
         } else {
-          operator = '$eq'
+          operator = "$eq"
         }
         return {
           ...acc,
-          [key]: { [operator]: value }
+          [key]: { [operator]: value },
         }
-    }, {})
+      }, {})
 
     const sort = {
-      [queryFilterParams?.sort?.field]: queryFilterParams?.sort?.direction
+      [queryFilterParams?.sort?.field]: queryFilterParams?.sort?.direction,
     }
 
     return await dbConnector.users
@@ -46,16 +54,19 @@ class AdminController {
   }
 
   async deleteUser(id: string) {
-    return await dbConnector.users.deleteOne({ _id: new ObjectId(id)})
+    return await dbConnector.users.deleteOne({ _id: new ObjectId(id) })
   }
 
   async getUser(id: string) {
-    return dbConnector.users.findOne({ _id: new ObjectId(id)}, { projection: { passwordHash: 0 }})
+    return dbConnector.users.findOne(
+      { _id: new ObjectId(id) },
+      { projection: { passwordHash: 0 } }
+    )
   }
 
   async deleteUsers(ids: string[]) {
     const objectIds = ids.map((id) => new ObjectId(id))
-    return await dbConnector.users.deleteMany({ _id: { $in: objectIds }})
+    return await dbConnector.users.deleteMany({ _id: { $in: objectIds } })
   }
 
   async createUser({ login, password, roles, apiKey }) {
@@ -65,7 +76,10 @@ class AdminController {
 
   async updateUser({ id, login, password, roles }) {
     const passwordHash = await passwordService.hash(password)
-    return dbConnector.users.updateOne({ _id: new ObjectId(id) }, { $set: { login, passwordHash, roles }})
+    return dbConnector.users.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { login, passwordHash, roles } }
+    )
   }
 }
 

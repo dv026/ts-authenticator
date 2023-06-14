@@ -1,4 +1,4 @@
-import { dbConnector } from "../db-connector";
+import { dbConnector } from "../db-connector"
 
 class RoleController {
   constructor() {}

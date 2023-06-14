@@ -6,6 +6,6 @@ export interface IQueryFilterParams {
   apiKey?: string
   sort?: {
     field: string
-    direction: 'desc' | 'asc'
+    direction: "desc" | "asc"
   }
 }
