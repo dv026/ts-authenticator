@@ -78,6 +78,7 @@ class UserController {
 
       const a = new UserNotFound()
       console.log(a)
+      console.log(a.message)
       if (!user) {
         throw a
       }
