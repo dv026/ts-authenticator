@@ -76,8 +76,10 @@ class UserController {
     try {
       const user = await dbConnector.users.findOne({ login })
 
+      const a = new UserNotFound()
+      console.log(a)
       if (!user) {
-        throw new UserNotFound()
+        throw a
       }
 
       const isPasswordCorrect = await passwordService.compare(
