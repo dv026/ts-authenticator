@@ -12,6 +12,7 @@ import { apiKeysConroller } from "./controllers/api-keys-controller"
 import { tryCatch } from "./utils.ts/try-catch"
 import { ApiKeyNotProvided } from "./errors/api-key-not-provided"
 import { errorMiddleware } from "./middlewares/error-middleware"
+import { JwtNotFound } from "./errors/jwt-not-found"
 
 const app = express()
 const port = 3000
@@ -55,7 +56,18 @@ app.post(
 app.get(
   routes.user.checkAuth,
   tryCatch(async (req, res) => {
-    const token = req.headers.authorization.split(" ")[1]
+    const authHeader = req.headers.authorization
+    let token
+
+    if (authHeader) {
+      token = authHeader.split(" ")[1]
+      if (!token) {
+        throw new JwtNotFound()
+      }
+    } else {
+      throw new JwtNotFound()
+    }
+
     return res.json(userController.checkAuth(token))
   })
 )

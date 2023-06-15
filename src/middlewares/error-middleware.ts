@@ -1,6 +1,4 @@
 export const errorMiddleware = (error, req, res, next) => {
-  console.log(error)
-
   if (error.name === "ValidationError") {
     return res.status(400).send({
       type: "ValidationError",
@@ -9,13 +7,11 @@ export const errorMiddleware = (error, req, res, next) => {
   }
 
   const erroObj = {
-    status: 400,
     errorCode: error.errorCode,
-    message: error.errorMessage,
-    // details: error.details,
+    message: error.message,
   }
 
-  return res.status(400).json("er obj", erroObj)
+  return res.status(400).json(erroObj)
 
   return res.status(500).send("Something went wrong")
 }
