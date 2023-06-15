@@ -74,42 +74,38 @@ class UserController {
     login,
     password,
   }: IUserCredentials): Promise<RegistrationOrLoginResponse> {
-    try {
-      const user = await dbConnector.users.findOne({ login })
+    const user = await dbConnector.users.findOne({ login })
 
-      if (user === null) {
-        throw new UserNotFound()
-      }
+    if (user === null) {
+      throw new UserNotFound()
+    }
 
-      const isPasswordCorrect = await passwordService.compare(
-        password,
-        user.passwordHash
-      )
+    const isPasswordCorrect = await passwordService.compare(
+      password,
+      user.passwordHash
+    )
 
-      if (!isPasswordCorrect) {
-        throw new IncorrectPassword()
-      }
+    if (!isPasswordCorrect) {
+      throw new IncorrectPassword()
+    }
 
-      const accessToken = tokenService.create(
-        { user: { login, _id: user._id } },
-        "1h"
-      )
-      const refreshToken = tokenService.create(
-        { user: { login, _id: user._id } },
-        "24h"
-      )
+    const accessToken = tokenService.create(
+      { user: { login, _id: user._id } },
+      "1h"
+    )
+    const refreshToken = tokenService.create(
+      { user: { login, _id: user._id } },
+      "24h"
+    )
 
-      return {
-        accessToken,
-        refreshToken,
-        user: {
-          login,
-          roles: user.roles,
-          _id: user._id.toString(),
-        },
-      }
-    } catch (e) {
-      throw new Error(e)
+    return {
+      accessToken,
+      refreshToken,
+      user: {
+        login,
+        roles: user.roles,
+        _id: user._id.toString(),
+      },
     }
   }
 
