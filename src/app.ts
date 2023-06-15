@@ -11,6 +11,7 @@ import { adminConroller } from "./controllers/admin-controller"
 import { apiKeysConroller } from "./controllers/api-keys-controller"
 import { tryCatch } from "./utils.ts/try-catch"
 import { ApiKeyNotProvided } from "./errors/api-key-not-provided"
+import { errorMiddleware } from "./middlewares/error-middleware"
 
 const app = express()
 const port = 3000
@@ -214,6 +215,8 @@ app.get(routes.admin.apiKeys.get, async (req, res) => {
     res.json({ error: e })
   }
 })
+
+app.use(errorMiddleware)
 
 app.listen(port, async () => {
   await dbConnector.connect(url)

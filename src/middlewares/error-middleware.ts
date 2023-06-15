@@ -1,6 +1,4 @@
-import { ApiKeyNotFound } from "../errors/api-key-not-found"
-
-const errorHandler = (error, req, res, next) => {
+export const errorMiddleware = (error, req, res, next) => {
   console.log(error)
 
   if (error.name === "ValidationError") {
@@ -18,5 +16,3 @@ const errorHandler = (error, req, res, next) => {
 
   return res.status(500).send("Something went wrong")
 }
-
-module.exports = errorHandler
