@@ -46,45 +46,36 @@ app.post(
   routes.user.login,
   tryCatch(async (req, res) => {
     const { login, password, apiKey } = req.body
-    try {
-      const user = await userController.login({ login, password, apiKey })
-      return res.json(user)
-    } catch (e) {
-      return res.status(400).send({
-        message: e.message,
-      })
-    }
+    const user = await userController.login({ login, password, apiKey })
+    return res.json(user)
   })
 )
 
-app.get(routes.user.checkAuth, async (req, res) => {
-  const token = req.headers.authorization.split(" ")[1]
-  try {
+app.get(
+  routes.user.checkAuth,
+  tryCatch(async (req, res) => {
+    const token = req.headers.authorization.split(" ")[1]
     return res.json(userController.checkAuth(token))
-  } catch (e) {
-    return res.json(e)
-  }
-})
+  })
+)
 
-app.post(routes.user.forgotPassword, async (req, res) => {
-  const { login } = req.body
-  try {
+app.post(
+  routes.user.forgotPassword,
+  tryCatch(async (req, res) => {
+    const { login } = req.body
     await userController.forgotPassword({ login })
     res.json({ message: "Email's been sent to your email" })
-  } catch (e) {
-    return res.json(e)
-  }
-})
+  })
+)
 
-app.post(routes.user.resetPassword, async (req, res) => {
-  const { token, newPassword } = req.body
-  try {
+app.post(
+  routes.user.resetPassword,
+  tryCatch(async (req, res) => {
+    const { token, newPassword } = req.body
     await userController.resetPassword({ token, newPassword })
     res.json("Password's been successfully changed")
-  } catch (e) {
-    res.json({ error: e })
-  }
-})
+  })
+)
 
 app.get(routes.admin.users.get, async (req, res) => {
   const queryParams = req.query

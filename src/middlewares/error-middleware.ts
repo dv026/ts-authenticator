@@ -1,3 +1,5 @@
+import { ApiKeyNotFound } from "../errors/api-key-not-found"
+
 const errorHandler = (error, req, res, next) => {
   console.log(error)
 
@@ -8,11 +10,11 @@ const errorHandler = (error, req, res, next) => {
     })
   }
 
-  // if (error instanceof AppError) {
-  //   return res.status(error.statusCode).json({
-  //     errorCode: error.errorCode,
-  //   });
-  // }
+  return res.status(400).json({
+    errorCode: error.errorCode,
+    message: error.errorMessage,
+    details: error.details,
+  })
 
   return res.status(500).send("Something went wrong")
 }
