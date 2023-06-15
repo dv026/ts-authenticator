@@ -1,5 +1,7 @@
-import { emailService } from "./../services/email-service"
+import { ObjectId } from "mongodb"
+import base64 from "base-64"
 
+import { emailService } from "./../services/email-service"
 import { tokenService } from "./../services/token-service"
 import { RegistrationOrLoginResponse } from "../types/user-controller"
 import { IUserCredentials } from "../types/user"
@@ -7,11 +9,11 @@ import { UserAlreadyExists, UserNotFound, IncorrectPassword } from "../errors"
 import { dbConnector } from "../db-connector"
 import { JwtMalformed } from "../errors/jwr-malformed"
 import { passwordService } from "../services/password-service"
-import { ObjectId } from "mongodb"
 import { createResetLink } from "../utils.ts/get-reset-link"
 import { roleService } from "../services/role-servise"
-import base64 from "base-64"
 import { apiKeyService } from "../services/api-key-service"
+import { ApiKeyNotFound } from "../errors/api-key-not-found"
+import { IncorrectResetToken } from "../errors/incorrect-reset-token"
 
 class UserController {
   constructor() {}
@@ -35,7 +37,7 @@ class UserController {
       const userRoles = [defaultRole.name]
 
       if (!apiKeyService.checkApiKey(apiKey)) {
-        throw new Error("API Key does not exist")
+        throw new ApiKeyNotFound()
       }
 
       const newUser = await dbConnector.users.insertOne({
@@ -64,7 +66,6 @@ class UserController {
         },
       }
     } catch (e) {
-      console.log("error 2")
       throw new Error(e)
     }
   }
@@ -76,11 +77,8 @@ class UserController {
     try {
       const user = await dbConnector.users.findOne({ login })
 
-      const a = new UserNotFound()
-      console.log(a)
-      console.log(a.message)
-      if (!user) {
-        throw a
+      if (user === null) {
+        throw new UserNotFound()
       }
 
       const isPasswordCorrect = await passwordService.compare(
@@ -119,24 +117,29 @@ class UserController {
     try {
       const user = await dbConnector.users.findOne({ login })
 
-      const compareResult = passwordService.compare(
+      if (user === null) {
+        throw new UserNotFound()
+      }
+
+      const isPasswordsEqual = passwordService.compare(
         oldPassword,
         user.passwordHash
       )
-      if (compareResult) {
-        const newPasswordHash = await passwordService.hash(newPassword)
 
-        await dbConnector.users.updateOne(
-          { login },
-          {
-            $set: {
-              passwordHash: newPasswordHash,
-            },
-          }
-        )
+      if (!isPasswordsEqual) {
+        throw new IncorrectPassword()
       }
 
-      return
+      const newPasswordHash = await passwordService.hash(newPassword)
+
+      await dbConnector.users.updateOne(
+        { login },
+        {
+          $set: {
+            passwordHash: newPasswordHash,
+          },
+        }
+      )
     } catch (e) {
       throw new Error(e)
     }
@@ -185,18 +188,19 @@ class UserController {
       const tokenEntity = await dbConnector.tokens.findOne({ userId, token })
 
       if (tokenEntity.token === token) {
-        const passwordHash = await passwordService.hash(newPassword)
-        await dbConnector.tokens.deleteMany({ userId })
-        return await dbConnector.users.updateOne(
-          { _id: new ObjectId(userId) },
-          {
-            $set: {
-              passwordHash,
-            },
-          }
-        )
+        throw new IncorrectResetToken()
       }
-      throw new Error()
+
+      const passwordHash = await passwordService.hash(newPassword)
+      await dbConnector.tokens.deleteMany({ userId })
+      return await dbConnector.users.updateOne(
+        { _id: new ObjectId(userId) },
+        {
+          $set: {
+            passwordHash,
+          },
+        }
+      )
     } catch (e) {
       throw new Error(e)
     }

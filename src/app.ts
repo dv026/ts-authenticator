@@ -9,6 +9,8 @@ import { userController } from "./controllers/user-controller"
 import { dbConnector } from "./db-connector"
 import { adminConroller } from "./controllers/admin-controller"
 import { apiKeysConroller } from "./controllers/api-keys-controller"
+import { tryCatch } from "./utils.ts/try-catch"
+import { ApiKeyNotProvided } from "./errors/api-key-not-provided"
 
 const app = express()
 const port = 3000
@@ -20,43 +22,40 @@ app.use(cors())
 // get body from request
 app.use(express.json())
 
-app.post(routes.user.registration, async (req, res) => {
-  const { login, password } = req.body
-  const headers = req.headers
-  const apiKey = headers["api-key"]
-  try {
-    if (apiKey) {
-      const user = await userController.registration({
-        login,
-        password,
-        apiKey: apiKey.toString(),
-      })
+app.post(
+  routes.user.registration,
+  tryCatch(async (req, res) => {
+    const { login, password } = req.body
+    const headers = req.headers
+    const apiKey = headers["api-key"]
+
+    if (!apiKey) {
+      throw new ApiKeyNotProvided()
+    }
+
+    const user = await userController.registration({
+      login,
+      password,
+      apiKey: apiKey.toString(),
+    })
+    return res.json(user)
+  })
+)
+
+app.post(
+  routes.user.login,
+  tryCatch(async (req, res) => {
+    const { login, password, apiKey } = req.body
+    try {
+      const user = await userController.login({ login, password, apiKey })
       return res.json(user)
-    } else {
+    } catch (e) {
       return res.status(400).send({
-        message: "there is not API KEY",
+        message: e.message,
       })
     }
-  } catch (e) {
-    console.log("error cotroller")
-    //throw new Error("Hello error!")
-    return res.status(500).send({
-      message: e.message,
-    })
-  }
-})
-
-app.post(routes.user.login, async (req, res) => {
-  const { login, password, apiKey } = req.body
-  try {
-    const user = await userController.login({ login, password, apiKey })
-    return res.json(user)
-  } catch (e) {
-    return res.status(400).send({
-      message: e.message,
-    })
-  }
-})
+  })
+)
 
 app.get(routes.user.checkAuth, async (req, res) => {
   const token = req.headers.authorization.split(" ")[1]
