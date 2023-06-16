@@ -9,6 +9,7 @@ export const errorMiddleware = (error, req, res, next) => {
   const erroObj = {
     errorCode: error.errorCode,
     message: error.message,
+    status: error.status,
   }
 
   return res.status(400).json(erroObj)
