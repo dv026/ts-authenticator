@@ -77,7 +77,7 @@ app.post(
   tryCatch(async (req, res) => {
     const { login } = req.body
     await userController.forgotPassword({ login })
-    res
+    return res
       .status(200)
       .json({ message: "Email's been sent to your email", status: 200 })
   })
