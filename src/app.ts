@@ -101,10 +101,10 @@ app.get(routes.admin.users.get, async (req, res) => {
       // roles: queryParams.roles as string,
       // login: queryParams.login as string,
       apiKey: queryParams.apiKey as string,
-      sort: {
-        field: queryParams.field as string,
-        direction: queryParams.direction as any,
-      },
+      // sort: {
+      //   field: queryParams.field as string,
+      //   direction: queryParams.direction as any,
+      // },
     })
     const totalCount = await adminConroller.getUsersCount()
     res.json({

@@ -13,10 +13,10 @@ class AdminController {
       roles: "",
       login: "",
       apiKey: "",
-      sort: {
-        field: "login",
-        direction: "asc",
-      },
+      // sort: {
+      //   field: "login",
+      //   direction: "asc",
+      // },
     }
   ) {
     console.log("queryFilterParams", queryFilterParams)
