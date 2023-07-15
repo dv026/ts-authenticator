@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "build:render": "npm i && npm run build",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "push": "git add * && git commit -m 'fix' && git push origin head"
   },
   "keywords": [],
   "author": "",
