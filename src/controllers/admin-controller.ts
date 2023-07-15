@@ -43,7 +43,8 @@ class AdminController {
       }, {})
 
     const sort = {
-      [queryFilterParams?.sort?.field]: queryFilterParams?.sort?.direction,
+      // [queryFilterParams?.sort?.field]: queryFilterParams?.sort?.direction,
+      ["login"]: "desc",
     }
 
     console.log("filter", filter)
@@ -52,7 +53,7 @@ class AdminController {
       .find(filter)
       .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
       .limit(queryFilterParams.pageSize)
-      .sort(sort)
+      // .sort(sort)
       .toArray()
   }
 
