@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb"
+import { ObjectId, SortDirection } from "mongodb"
 import { dbConnector } from "../db-connector"
 import { IQueryFilterParams } from "../types/query-filter-params"
 import { passwordService } from "../services/password-service"
@@ -42,10 +42,10 @@ class AdminController {
         }
       }, {})
 
-    const sort = {
-      // [queryFilterParams?.sort?.field]: queryFilterParams?.sort?.direction,
-      ["login"]: "desc",
-    }
+    // const sort = {
+    //   // [queryFilterParams?.sort?.field]: queryFilterParams?.sort?.direction,
+    //   ["login"]: -1,
+    // }
 
     console.log("filter", filter)
 
@@ -53,7 +53,7 @@ class AdminController {
       .find(filter)
       .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
       .limit(queryFilterParams.pageSize)
-      // .sort(sort)
+      .sort({ login: "desc" })
       .toArray()
   }
 

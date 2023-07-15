@@ -98,8 +98,8 @@ app.get(routes.admin.users.get, async (req, res) => {
     const users = await adminConroller.getUsers({
       pageSize: parseInt(queryParams.pageSize.toString()) || 10,
       currentPage: parseInt(queryParams.currentPage.toString()) || 1,
-      // roles: queryParams.roles as string,
-      // login: queryParams.login as string,
+      roles: queryParams.roles as string,
+      login: queryParams.login as string,
       apiKey: queryParams.apiKey as string,
       // sort: {
       //   field: queryParams.field as string,
