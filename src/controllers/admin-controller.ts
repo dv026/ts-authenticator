@@ -15,6 +15,7 @@ class AdminController {
       apiKey: "",
     }
   ) {
+    console.log("queryFilterParams", queryFilterParams)
     const filter: any = Object.entries(queryFilterParams)
       .filter(
         ([key, value]) =>
