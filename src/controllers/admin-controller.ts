@@ -42,6 +42,8 @@ class AdminController {
       [queryFilterParams?.sort?.field]: queryFilterParams?.sort?.direction,
     }
 
+    console.log("filter", filter)
+
     return await dbConnector.users
       .find(filter)
       .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
