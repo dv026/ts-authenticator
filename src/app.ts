@@ -148,15 +148,18 @@ app.post(routes.admin.users.delete, async (req, res) => {
   }
 })
 
-app.post(routes.admin.user.create, async (req, res) => {
-  const { login, password, roles, apiKey } = req.body
-  try {
-    await adminConroller.createUser({ login, password, roles, apiKey })
-    res.json("User's been created")
-  } catch (e) {
-    res.json({ error: e })
-  }
-})
+app.post(
+  routes.admin.user.create,
+  tryCatch(async (req, res) => {
+    const { login, password, roles, apiKey } = req.body
+    try {
+      await adminConroller.createUser({ login, password, roles, apiKey })
+      res.json("User's been created")
+    } catch (e) {
+      res.json({ error: e })
+    }
+  })
+)
 
 app.put(routes.admin.user.update, async (req, res) => {
   const { login, password, roles } = req.body
