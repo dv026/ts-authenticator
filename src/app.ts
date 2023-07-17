@@ -95,17 +95,23 @@ app.post(
 app.get(routes.admin.users.get, async (req, res) => {
   const queryParams = req.query
   try {
-    const users = await adminConroller.getUsers({
-      pageSize: parseInt(queryParams.pageSize.toString()) || 10,
-      currentPage: parseInt(queryParams.currentPage.toString()) || 1,
-      roles: queryParams.roles as string,
-      login: queryParams.login as string,
-      apiKey: queryParams.apiKey as string,
-      // sort: {
-      //   field: queryParams.field as string,
-      //   direction: queryParams.direction as any,
-      // },
-    })
+    const users = await adminConroller.getUsers(
+      {
+        pageSize: parseInt(queryParams.pageSize.toString()) || 10,
+        currentPage: parseInt(queryParams.currentPage.toString()) || 1,
+        roles: queryParams.roles as string,
+        login: queryParams.login as string,
+        apiKey: queryParams.apiKey as string,
+        // sort: {
+        //   field:c as string,
+        //   direction: queryParams.direction as any,
+        // },
+      },
+      {
+        field: queryParams.field as string,
+        direction: queryParams.direction as "asc" | "desc",
+      }
+    )
     const totalCount = await adminConroller.getUsersCount()
     res.json({
       users,
