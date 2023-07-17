@@ -51,6 +51,7 @@ class AdminController {
     }
 
     console.log("filter", filter)
+    console.log("sort", sort)
 
     return await dbConnector.users
       .find(filter)
