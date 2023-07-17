@@ -4,8 +4,9 @@ export interface IQueryFilterParams {
   login?: string
   roles?: string
   apiKey?: string
-  // sort?: {
-  //   field: string
-  //   direction: "desc" | "asc"
-  // }
+}
+
+export interface IQuerySortParams {
+  field: string
+  direction: "desc" | "asc"
 }

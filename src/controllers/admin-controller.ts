@@ -1,6 +1,9 @@
 import { ObjectId, SortDirection } from "mongodb"
 import { dbConnector } from "../db-connector"
-import { IQueryFilterParams } from "../types/query-filter-params"
+import {
+  IQueryFilterParams,
+  IQuerySortParams,
+} from "../types/query-filter-params"
 import { passwordService } from "../services/password-service"
 
 class AdminController {
@@ -13,10 +16,10 @@ class AdminController {
       roles: "",
       login: "",
       apiKey: "",
-      // sort: {
-      //   field: "login",
-      //   direction: "asc",
-      // },
+    },
+    querySortParams: IQuerySortParams = {
+      field: "login",
+      direction: "asc",
     }
   ) {
     console.log("queryFilterParams", queryFilterParams)
@@ -30,6 +33,7 @@ class AdminController {
       )
       .reduce((acc, [key, value]) => {
         let operator
+        // TODO: temp solution
         if (key === "roles") {
           operator = "$in"
           value = JSON.parse(value)
@@ -42,10 +46,9 @@ class AdminController {
         }
       }, {})
 
-    // const sort = {
-    //   // [queryFilterParams?.sort?.field]: queryFilterParams?.sort?.direction,
-    //   ["login"]: -1,
-    // }
+    const sort = {
+      [querySortParams?.field]: querySortParams?.direction,
+    }
 
     console.log("filter", filter)
 
@@ -53,7 +56,8 @@ class AdminController {
       .find(filter)
       .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
       .limit(queryFilterParams.pageSize)
-      .sort({ login: "desc" })
+      // .sort({ login: "desc" })
+      .sort(sort)
       .toArray()
   }
 
