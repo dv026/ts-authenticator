@@ -6,12 +6,14 @@ export const errorMiddleware = (error, req, res, next) => {
     })
   }
 
-  const erroObj = {
+  const errorObj = {
     errorCode: error.errorCode,
     message: error.message,
   }
 
-  return res.status(400).json(erroObj)
+  console.log(errorObj)
+
+  return res.status(400).json(errorObj)
 
   return res.status(500).send("Something went wrong")
 }
