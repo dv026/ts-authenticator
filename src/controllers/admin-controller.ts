@@ -85,11 +85,13 @@ class AdminController {
   }
 
   async createUser({ login, password, roles, apiKey }) {
+    login = login.toLowerCase()
     const passwordHash = await passwordService.hash(password)
     await dbConnector.users.insertOne({ login, passwordHash, roles, apiKey })
   }
 
   async updateUser({ id, login, password, roles }) {
+    login = login.toLowerCase()
     const passwordHash = await passwordService.hash(password)
     return dbConnector.users.updateOne(
       { _id: new ObjectId(id) },
