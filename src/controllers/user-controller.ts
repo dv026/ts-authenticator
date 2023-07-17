@@ -23,6 +23,7 @@ class UserController {
     password,
     apiKey,
   }: IUserCredentials): Promise<RegistrationOrLoginResponse> {
+    login = login.toLocaleLowerCase()
     const user = await dbConnector.users.findOne({ login })
 
     if (user !== null) {
@@ -70,6 +71,7 @@ class UserController {
     login,
     password,
   }: IUserCredentials): Promise<RegistrationOrLoginResponse> {
+    login = login.toLocaleLowerCase()
     const user = await dbConnector.users.findOne({ login })
 
     if (user === null) {
@@ -106,6 +108,7 @@ class UserController {
   }
 
   async changePassword({ login, oldPassword, newPassword }) {
+    login = login.toLocaleLowerCase()
     const user = await dbConnector.users.findOne({ login })
 
     if (user === null) {
@@ -134,6 +137,7 @@ class UserController {
   }
 
   async forgotPassword({ login }) {
+    login = login.toLocaleLowerCase()
     const user = await dbConnector.users.findOne({ login })
 
     if (user === null) {
