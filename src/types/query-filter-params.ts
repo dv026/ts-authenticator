@@ -8,5 +8,5 @@ export interface IQueryFilterParams {
 
 export interface IQuerySortParams {
   field: string
-  direction: "desc" | "asc"
+  direction: "descend" | "ascend"
 }
