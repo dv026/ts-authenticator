@@ -13,6 +13,7 @@ import { tryCatch } from "./utils.ts/try-catch"
 import { ApiKeyNotProvided } from "./errors/api-key-not-provided"
 import { errorMiddleware } from "./middlewares/error-middleware"
 import { JwtNotFound } from "./errors/jwt-not-found"
+import { TSortDirection } from "./types/query-filter-params"
 
 const app = express()
 const port = 3000
@@ -105,7 +106,7 @@ app.get(routes.admin.users.get, async (req, res) => {
       },
       {
         field: queryParams.field as string,
-        direction: queryParams.direction as "ascend" | "descend",
+        direction: queryParams.direction as TSortDirection,
       }
     )
     const totalCount = await adminConroller.getUsersCount()

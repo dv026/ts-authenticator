@@ -19,7 +19,7 @@ class AdminController {
     },
     querySortParams: IQuerySortParams = {
       field: "login",
-      direction: "descend",
+      direction: "descending",
     }
   ) {
     console.log("queryFilterParams", queryFilterParams)
@@ -48,8 +48,7 @@ class AdminController {
       }, {})
 
     const sort: { [k: string]: "descending" | "ascending" } = {
-      [querySortParams?.field]:
-        querySortParams?.direction === "descend" ? "descending" : "ascending",
+      [querySortParams?.field]: querySortParams?.direction,
     }
 
     console.log("filter", filter)

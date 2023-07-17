@@ -6,7 +6,8 @@ export interface IQueryFilterParams {
   apiKey?: string
 }
 
+export type TSortDirection = "descending" | "ascending"
 export interface IQuerySortParams {
   field: string
-  direction: "descend" | "ascend"
+  direction: TSortDirection
 }
