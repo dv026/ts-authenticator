@@ -86,6 +86,12 @@ class AdminController {
 
   async createUser({ login, password, roles, apiKey }) {
     login = login.toLowerCase()
+    const user = dbConnector.users.findOne({ login })
+
+    if (user) {
+      throw new Error("user already exist")
+    }
+
     const passwordHash = await passwordService.hash(password)
     await dbConnector.users.insertOne({ login, passwordHash, roles, apiKey })
   }
