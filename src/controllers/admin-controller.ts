@@ -36,7 +36,7 @@ class AdminController {
         let operator
         // TODO: temp solution
         if (key === "roles") {
-          console.log("type", typeof key)
+          console.log("type", typeof value)
           operator = "$in"
           value = JSON.parse(value)
         } else {
