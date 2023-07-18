@@ -95,6 +95,7 @@ app.post(
 
 app.get(routes.admin.users.get, async (req, res) => {
   const queryParams = req.query
+  console.log(queryParams.roles)
   try {
     const users = await adminConroller.getUsers(
       {
