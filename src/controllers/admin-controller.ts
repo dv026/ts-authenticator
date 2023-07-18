@@ -35,8 +35,9 @@ class AdminController {
       .reduce((acc, [key, value]) => {
         let operator
         // TODO: temp solution
-        if (key === "roles") {
-          console.log("type", typeof value)
+        console.log("value", value)
+        if (Array.isArray(JSON.parse(value))) {
+          console.log("type", typeof JSON.parse(value))
           operator = "$in"
           value = JSON.parse(value)
         } else {
