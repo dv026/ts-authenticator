@@ -37,9 +37,7 @@ class AdminController {
       .reduce((acc, [key, value]) => {
         let operator
         if (value !== null && value !== undefined) {
-          // TODO: temp solution
-          console.log("value", value)
-          if (arrayFields.indexOf(key) > 0) {
+          if (arrayFields.indexOf(key) > -1) {
             operator = "$in"
             value = JSON.parse(value)
           } else {
