@@ -97,20 +97,19 @@ app.get(routes.admin.users.get, async (req, res) => {
   const queryParams = req.query
   console.log(queryParams.roles)
   try {
-    const users = await adminConroller.getUsers(
-      {
-        pageSize: parseInt(queryParams.pageSize.toString()) || 10,
-        currentPage: parseInt(queryParams.currentPage.toString()) || 1,
-        roles: queryParams.roles as string[],
-        login: queryParams.login as string,
-        apiKey: queryParams.apiKey as string,
-      },
-      {
-        field: queryParams.field as string,
-        direction: queryParams.direction as TSortDirection,
-      }
-    )
-    const totalCount = await adminConroller.getUsersCount()
+    const filterParams = {
+      pageSize: parseInt(queryParams.pageSize.toString()) || 10,
+      currentPage: parseInt(queryParams.currentPage.toString()) || 1,
+      roles: queryParams.roles as string[],
+      login: queryParams.login as string,
+      apiKey: queryParams.apiKey as string,
+    }
+
+    const users = await adminConroller.getUsers(filterParams, {
+      field: queryParams.field as string,
+      direction: queryParams.direction as TSortDirection,
+    })
+    const totalCount = await adminConroller.getUsersCount(filterParams)
     res.json({
       users,
       totalCount,

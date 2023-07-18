@@ -5,8 +5,7 @@ import {
   IQuerySortParams,
 } from "../types/query-filter-params"
 import { passwordService } from "../services/password-service"
-
-const arrayFields = ["roles"]
+import { getFilter } from "../utils.ts/get-filter"
 
 class AdminController {
   constructor() {}
@@ -24,58 +23,24 @@ class AdminController {
       direction: "ascending",
     }
   ) {
-    console.log("queryFilterParams", queryFilterParams)
-    console.log("querySortParams", querySortParams)
-    const filter: any = Object.entries(queryFilterParams)
-      .filter(
-        ([key, value]) =>
-          key !== "pageSize" &&
-          key !== "currentPage" &&
-          value !== null &&
-          value !== undefined
-      )
-      .reduce((acc, [key, value]) => {
-        let operator
-        if (value !== null && value !== undefined) {
-          if (arrayFields.indexOf(key) > -1) {
-            operator = "$in"
-            value = JSON.parse(value)
-          } else {
-            operator = "$eq"
-          }
-          return {
-            ...acc,
-            [key]: { [operator]: value },
-          }
-        }
-
-        return acc
-      }, {})
-
     const sort: { [k: string]: "descending" | "ascending" } = {
       [querySortParams?.field]: querySortParams?.direction,
     }
 
-    console.log("filter", filter)
-    console.log("sort", sort)
-
-    console.log("page size", queryFilterParams.pageSize)
-    console.log(
-      "skip",
-      (queryFilterParams.currentPage - 1) * queryFilterParams.pageSize
-    )
+    const filter = getFilter(queryFilterParams)
 
     return await dbConnector.users
       .find(filter)
-      // .find()
       .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
       .limit(queryFilterParams.pageSize)
       .sort(sort)
       .toArray()
   }
 
-  async getUsersCount() {
-    return await dbConnector.users.estimatedDocumentCount()
+  async getUsersCount(queryFilterParams: IQueryFilterParams) {
+    const filter = getFilter(queryFilterParams)
+
+    return await dbConnector.users.countDocuments(filter)
   }
 
   async deleteUser(id: string) {
