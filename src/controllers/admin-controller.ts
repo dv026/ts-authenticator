@@ -70,7 +70,7 @@ class AdminController {
       .find()
       .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
       .limit(queryFilterParams.pageSize)
-      // .sort(sort)
+      .sort(sort)
       .toArray()
   }
 
