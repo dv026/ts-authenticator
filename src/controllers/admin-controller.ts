@@ -13,7 +13,7 @@ class AdminController {
     queryFilterParams: IQueryFilterParams = {
       currentPage: 1,
       pageSize: 10,
-      roles: "",
+      roles: [],
       login: "",
       apiKey: "",
     },
@@ -36,6 +36,7 @@ class AdminController {
         let operator
         // TODO: temp solution
         if (key === "roles") {
+          console.log("type", typeof key)
           operator = "$in"
           value = JSON.parse(value)
         } else {
