@@ -34,19 +34,23 @@ class AdminController {
       )
       .reduce((acc, [key, value]) => {
         let operator
-        // TODO: temp solution
-        console.log("value", value)
-        if (Array.isArray(JSON.parse(value))) {
-          console.log("type", typeof JSON.parse(value))
-          operator = "$in"
-          value = JSON.parse(value)
-        } else {
-          operator = "$eq"
+        if (value !== null && value !== undefined) {
+          // TODO: temp solution
+          console.log("value", value)
+          if (Array.isArray(JSON.parse(value))) {
+            console.log("type", typeof JSON.parse(value))
+            operator = "$in"
+            value = JSON.parse(value)
+          } else {
+            operator = "$eq"
+          }
+          return {
+            ...acc,
+            [key]: { [operator]: value },
+          }
         }
-        return {
-          ...acc,
-          [key]: { [operator]: value },
-        }
+
+        return acc
       }, {})
 
     const sort: { [k: string]: "descending" | "ascending" } = {
