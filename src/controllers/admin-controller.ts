@@ -6,6 +6,8 @@ import {
 } from "../types/query-filter-params"
 import { passwordService } from "../services/password-service"
 
+const arrayFields = ["roles"]
+
 class AdminController {
   constructor() {}
 
@@ -37,8 +39,7 @@ class AdminController {
         if (value !== null && value !== undefined) {
           // TODO: temp solution
           console.log("value", value)
-          if (Array.isArray(JSON.parse(value))) {
-            console.log("type", typeof JSON.parse(value))
+          if (arrayFields.indexOf(key) > 0) {
             operator = "$in"
             value = JSON.parse(value)
           } else {
