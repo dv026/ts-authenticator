@@ -16,8 +16,8 @@ class AdminController {
       currentPage: 1,
       pageSize: 10,
       roles: [],
-      login: "",
-      apiKey: "",
+      login: null,
+      apiKey: null,
     },
     querySortParams: IQuerySortParams = {
       field: "login",
@@ -66,8 +66,8 @@ class AdminController {
     )
 
     return await dbConnector.users
-      // .find(filter)
-      .find()
+      .find(filter)
+      // .find()
       .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
       .limit(queryFilterParams.pageSize)
       .sort(sort)
