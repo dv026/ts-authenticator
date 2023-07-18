@@ -21,7 +21,7 @@ class AdminController {
     },
     querySortParams: IQuerySortParams = {
       field: "login",
-      direction: "descending",
+      direction: "ascending",
     }
   ) {
     console.log("queryFilterParams", queryFilterParams)
@@ -59,12 +59,18 @@ class AdminController {
     console.log("filter", filter)
     console.log("sort", sort)
 
+    console.log("page size", queryFilterParams.pageSize)
+    console.log(
+      "skip",
+      (queryFilterParams.currentPage - 1) * queryFilterParams.pageSize
+    )
+
     return await dbConnector.users
-      .find(filter)
+      // .find(filter)
+      .find()
       .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
       .limit(queryFilterParams.pageSize)
-      // .sort({ login: "desc" })
-      .sort(sort)
+      // .sort(sort)
       .toArray()
   }
 
