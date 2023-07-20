@@ -224,6 +224,7 @@ app.post(routes.admin.apiKeys.delete, async (req, res) => {
 
 app.get(routes.admin.apiKeys.get, async (req, res) => {
   const queryParams = req.query
+  console.log("queryParams", queryParams)
   try {
     const filterParams: IQueryFilterParamsApiKeys = {
       // TODO: check types
