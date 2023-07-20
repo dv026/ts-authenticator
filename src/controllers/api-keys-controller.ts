@@ -55,6 +55,8 @@ class ApiKeysController {
       "name"
     )
 
+    console.log("filter", filter)
+
     return await dbConnector.apiKeys
       .find(filter)
       .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
