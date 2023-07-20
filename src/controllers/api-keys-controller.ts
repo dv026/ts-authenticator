@@ -50,7 +50,10 @@ class ApiKeysController {
       [querySortParams?.field]: querySortParams?.direction,
     }
 
-    const filter = getFilter<IQueryFilterParamsApiKeys>(queryFilterParams)
+    const filter = getFilter<IQueryFilterParamsApiKeys>(
+      queryFilterParams,
+      "name"
+    )
 
     return await dbConnector.apiKeys
       .find(filter)

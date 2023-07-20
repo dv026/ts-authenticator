@@ -38,7 +38,7 @@ class UserController {
   }
 
   async getUsersCount(queryFilterParams: IQueryFilterParamsUser) {
-    const filter = getFilter(queryFilterParams)
+    const filter = getFilter(queryFilterParams, "login")
 
     return await dbConnector.users.countDocuments(filter)
   }

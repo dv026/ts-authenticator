@@ -2,7 +2,10 @@ import { IQueryFilterParamsUser } from "../types/query-filter-params"
 
 const arrayFields = ["roles"]
 
-export const getFilter = <T>(queryFilterParams: T) => {
+export const getFilter = <T>(
+  queryFilterParams: T,
+  searchFieldName?: string
+) => {
   return Object.entries(queryFilterParams)
     .filter(
       ([key, value]) =>
@@ -23,7 +26,7 @@ export const getFilter = <T>(queryFilterParams: T) => {
           }
         }
 
-        const fieldName = key === "searchQuery" ? "login" : key
+        const fieldName = key === "searchQuery" ? searchFieldName : key
 
         return {
           ...acc,
