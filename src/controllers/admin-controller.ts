@@ -27,6 +27,7 @@ class AdminController {
       [querySortParams?.field]: querySortParams?.direction,
     }
 
+    console.log("queryFilterParams", queryFilterParams)
     const filter = getFilter(queryFilterParams)
 
     console.log("filter", filter)
