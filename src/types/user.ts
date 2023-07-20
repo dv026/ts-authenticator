@@ -7,4 +7,5 @@ export interface IUserCredentials {
   login: string
   password: string
   apiKey: string
+  createdDate?: number
 }

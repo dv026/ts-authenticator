@@ -22,6 +22,7 @@ class LoginController {
     login,
     password,
     apiKey,
+    createdDate,
   }: IUserCredentials): Promise<RegistrationOrLoginResponse> {
     login = login.toLocaleLowerCase()
     const user = await dbConnector.users.findOne({ login })
@@ -45,6 +46,7 @@ class LoginController {
       passwordHash,
       roles: userRoles,
       apiKey,
+      createdDate,
     })
 
     const accessToken = tokenService.create(

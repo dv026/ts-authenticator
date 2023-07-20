@@ -31,7 +31,7 @@ app.use(express.json())
 app.post(
   routes.user.registration,
   tryCatch(async (req, res) => {
-    const { login, password } = req.body
+    const { login, password, createdDate } = req.body
     const headers = req.headers
     const apiKey = headers["api-key"]
 
@@ -43,6 +43,7 @@ app.post(
       login,
       password,
       apiKey: apiKey.toString(),
+      createdDate,
     })
     return res.json(user)
   })
