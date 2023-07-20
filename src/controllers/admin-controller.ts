@@ -61,7 +61,7 @@ class AdminController {
 
   async createUser({ login, password, roles, apiKey }) {
     login = login.toLowerCase()
-    const user = dbConnector.users.findOne({ login })
+    const user = await dbConnector.users.findOne({ login })
 
     console.log('login', login)
     console.log('user', user)
