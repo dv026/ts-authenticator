@@ -1,8 +1,8 @@
-import { IQueryFilterParams } from "../types/query-filter-params"
+import { IQueryFilterParamsUser } from "../types/query-filter-params"
 
 const arrayFields = ["roles"]
 
-export const getFilter = (queryFilterParams: IQueryFilterParams) => {
+export const getFilter = <T>(queryFilterParams: T) => {
   return Object.entries(queryFilterParams)
     .filter(
       ([key, value]) =>

@@ -1,6 +1,11 @@
 import { ObjectId } from "mongodb"
 import { dbConnector } from "../db-connector"
 import randomstring from "randomstring"
+import {
+  IQueryFilterParamsApiKeys,
+  IQuerySortParams,
+} from "../types/query-filter-params"
+import { getFilter } from "../utils.ts/get-filter"
 
 class ApiKeysController {
   constructor() {}
@@ -25,8 +30,40 @@ class ApiKeysController {
     return dbConnector.apiKeys.insertOne({ name, value: apiKey, userId })
   }
 
-  async getAll(userId: string) {
-    return dbConnector.apiKeys.find({ userId }).toArray()
+  // async getAll(userId: string) {
+  //   return dbConnector.apiKeys.find({ userId }).toArray()
+  // }
+
+  async getList(
+    queryFilterParams: IQueryFilterParamsApiKeys = {
+      currentPage: 1,
+      pageSize: 10,
+      searchQuery: null,
+      userId: "",
+    },
+    querySortParams: IQuerySortParams = {
+      field: "login",
+      direction: "ascending",
+    }
+  ) {
+    const sort: { [k: string]: "descending" | "ascending" } = {
+      [querySortParams?.field]: querySortParams?.direction,
+    }
+
+    const filter = getFilter<IQueryFilterParamsApiKeys>(queryFilterParams)
+
+    return await dbConnector.apiKeys
+      .find(filter)
+      .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
+      .limit(queryFilterParams.pageSize)
+      .sort(sort)
+      .toArray()
+  }
+
+  async getApiKeysCount(queryFilterParams: IQueryFilterParamsApiKeys) {
+    const filter = getFilter(queryFilterParams)
+
+    return await dbConnector.apiKeys.countDocuments(filter)
   }
 
   async deleteMany(ids: string[]) {

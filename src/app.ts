@@ -5,15 +5,18 @@ var cors = require("cors")
 import express from "express"
 
 import { routes } from "./routes"
-import { userController } from "./controllers/user-controller"
+import { loginController } from "./controllers/login-controller"
 import { dbConnector } from "./db-connector"
-import { adminConroller } from "./controllers/admin-controller"
+import { userController } from "./controllers/user-controller"
 import { apiKeysConroller } from "./controllers/api-keys-controller"
 import { tryCatch } from "./utils.ts/try-catch"
 import { ApiKeyNotProvided } from "./errors/api-key-not-provided"
 import { errorMiddleware } from "./middlewares/error-middleware"
 import { JwtNotFound } from "./errors/jwt-not-found"
-import { TSortDirection } from "./types/query-filter-params"
+import {
+  IQueryFilterParamsApiKeys,
+  TSortDirection,
+} from "./types/query-filter-params"
 
 const app = express()
 const port = 3000
@@ -36,7 +39,7 @@ app.post(
       throw new ApiKeyNotProvided()
     }
 
-    const user = await userController.registration({
+    const user = await loginController.registration({
       login,
       password,
       apiKey: apiKey.toString(),
@@ -49,7 +52,7 @@ app.post(
   routes.user.login,
   tryCatch(async (req, res) => {
     const { login, password, apiKey } = req.body
-    const user = await userController.login({ login, password, apiKey })
+    const user = await loginController.login({ login, password, apiKey })
     return res.json(user)
   })
 )
@@ -69,7 +72,7 @@ app.get(
       throw new JwtNotFound()
     }
 
-    return res.json(userController.checkAuth(token))
+    return res.json(loginController.checkAuth(token))
   })
 )
 
@@ -77,7 +80,7 @@ app.post(
   routes.user.forgotPassword,
   tryCatch(async (req, res) => {
     const { login } = req.body
-    await userController.forgotPassword({ login })
+    await loginController.forgotPassword({ login })
     return res
       .status(200)
       .json({ message: "Email's been sent to your email", status: 200 })
@@ -88,14 +91,13 @@ app.post(
   routes.user.resetPassword,
   tryCatch(async (req, res) => {
     const { token, newPassword } = req.body
-    await userController.resetPassword({ token, newPassword })
+    await loginController.resetPassword({ token, newPassword })
     res.json("Password's been successfully changed")
   })
 )
 
 app.get(routes.admin.users.get, async (req, res) => {
   const queryParams = req.query
-  console.log(queryParams.roles)
   try {
     const filterParams = {
       pageSize: parseInt(queryParams.pageSize.toString()) || 10,
@@ -105,11 +107,11 @@ app.get(routes.admin.users.get, async (req, res) => {
       apiKey: queryParams.apiKey as string,
     }
 
-    const users = await adminConroller.getUsers(filterParams, {
+    const users = await userController.getList(filterParams, {
       field: queryParams.field as string,
       direction: queryParams.direction as TSortDirection,
     })
-    const totalCount = await adminConroller.getUsersCount(filterParams)
+    const totalCount = await userController.getUsersCount(filterParams)
     res.json({
       users,
       totalCount,
@@ -122,7 +124,7 @@ app.get(routes.admin.users.get, async (req, res) => {
 app.delete(routes.admin.user.delete, async (req, res) => {
   const { id } = req.params
   try {
-    await adminConroller.deleteUser(id)
+    await userController.deleteUser(id)
     res.json("User's been deleted")
   } catch (e) {
     res.json({ error: e })
@@ -132,7 +134,7 @@ app.delete(routes.admin.user.delete, async (req, res) => {
 app.get(routes.admin.user.get, async (req, res) => {
   const { id } = req.params
   try {
-    const user = await adminConroller.getUser(id)
+    const user = await userController.getUser(id)
     res.json(user)
   } catch (e) {
     res.json({ error: e })
@@ -142,7 +144,7 @@ app.get(routes.admin.user.get, async (req, res) => {
 app.post(routes.admin.users.delete, async (req, res) => {
   const { ids } = req.body
   try {
-    await adminConroller.deleteUsers(ids)
+    await userController.deleteUsers(ids)
     res.json("Users're been deleted")
   } catch (e) {
     res.json({ error: e })
@@ -153,7 +155,7 @@ app.post(
   routes.admin.user.create,
   tryCatch(async (req, res) => {
     const { login, password, roles, apiKey } = req.body
-    await adminConroller.createUser({ login, password, roles, apiKey })
+    await userController.createUser({ login, password, roles, apiKey })
     res.json("User's been created")
   })
 )
@@ -162,7 +164,7 @@ app.put(routes.admin.user.update, async (req, res) => {
   const { login, password, roles } = req.body
   const { id } = req.params
   try {
-    const user = await adminConroller.updateUser({ id, login, password, roles })
+    const user = await userController.updateUser({ id, login, password, roles })
     res.json({ user })
   } catch (e) {
     res.json({ error: e })
@@ -222,11 +224,27 @@ app.post(routes.admin.apiKeys.delete, async (req, res) => {
 
 app.get(routes.admin.apiKeys.get, async (req, res) => {
   const { userId } = req.query
+  const queryParams = req.query
   try {
-    // console.log("userId", userId)
-    // return res.status(400)
-    const apiKeys = await apiKeysConroller.getAll(userId.toString())
-    res.json(apiKeys)
+    const filterParams: IQueryFilterParamsApiKeys = {
+      // TODO: check types
+      currentPage: parseInt(queryParams.currentPage.toString()),
+      pageSize: parseInt(queryParams.pageSize.toString()),
+      searchQuery: queryParams.searchQuery.toString(),
+      userId: queryParams.userId.toString(),
+    }
+
+    const apiKeys = await apiKeysConroller.getList(filterParams, {
+      field: queryParams.field as string,
+      direction: queryParams.direction as TSortDirection,
+    })
+
+    const totalCount = await apiKeysConroller.getApiKeysCount(filterParams)
+
+    res.json({
+      apiKeys,
+      totalCount,
+    })
   } catch (e) {
     res.json({ error: e })
   }
