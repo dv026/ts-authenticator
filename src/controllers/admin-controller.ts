@@ -15,7 +15,7 @@ class AdminController {
       currentPage: 1,
       pageSize: 10,
       roles: [],
-      login: null,
+      searchQuery: null,
       apiKey: null,
     },
     querySortParams: IQuerySortParams = {
@@ -63,10 +63,8 @@ class AdminController {
     login = login.toLowerCase()
     const user = await dbConnector.users.findOne({ login })
 
-    console.log('login', login)
-    console.log('user', user)
     if (user) {
-      throw new Error("user already exist")
+      throw new Error("user already exists")
     }
 
     const passwordHash = await passwordService.hash(password)

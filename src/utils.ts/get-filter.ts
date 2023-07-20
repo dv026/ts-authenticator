@@ -20,9 +20,12 @@ export const getFilter = (queryFilterParams: IQueryFilterParams) => {
         } else {
           operator = "$eq"
         }
+
+        const fieldName = key === "searchQuery" ? "login" : key
+
         return {
           ...acc,
-          [key]: { [operator]: value },
+          [fieldName]: { [operator]: value },
         }
       }
 

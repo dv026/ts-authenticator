@@ -1,7 +1,7 @@
 export interface IQueryFilterParams {
   currentPage?: number
   pageSize?: number
-  login?: string
+  searchQuery?: string
   roles?: string[]
   apiKey?: string
 }
