@@ -3,4 +3,5 @@ export interface UserModel {
   passwordHash: string
   roles: string[]
   apiKey: string
+  createdDate: number
 }

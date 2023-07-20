@@ -154,8 +154,14 @@ app.post(routes.admin.users.delete, async (req, res) => {
 app.post(
   routes.admin.user.create,
   tryCatch(async (req, res) => {
-    const { login, password, roles, apiKey } = req.body
-    await userController.createUser({ login, password, roles, apiKey })
+    const { login, password, roles, apiKey, createdDate } = req.body
+    await userController.createUser({
+      login,
+      password,
+      roles,
+      apiKey,
+      createdDate,
+    })
     res.json("User's been created")
   })
 )

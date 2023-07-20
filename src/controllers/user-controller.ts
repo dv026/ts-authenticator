@@ -59,7 +59,7 @@ class UserController {
     return await dbConnector.users.deleteMany({ _id: { $in: objectIds } })
   }
 
-  async createUser({ login, password, roles, apiKey }) {
+  async createUser({ login, password, roles, apiKey, createdDate }) {
     login = login.toLowerCase()
     const user = await dbConnector.users.findOne({ login })
 
@@ -68,7 +68,13 @@ class UserController {
     }
 
     const passwordHash = await passwordService.hash(password)
-    await dbConnector.users.insertOne({ login, passwordHash, roles, apiKey })
+    await dbConnector.users.insertOne({
+      login,
+      passwordHash,
+      roles,
+      apiKey,
+      createdDate,
+    })
   }
 
   async updateUser({ id, login, password, roles }) {
