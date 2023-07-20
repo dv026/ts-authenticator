@@ -223,7 +223,6 @@ app.post(routes.admin.apiKeys.delete, async (req, res) => {
 })
 
 app.get(routes.admin.apiKeys.get, async (req, res) => {
-  const { userId } = req.query
   const queryParams = req.query
   try {
     const filterParams: IQueryFilterParamsApiKeys = {
@@ -233,6 +232,8 @@ app.get(routes.admin.apiKeys.get, async (req, res) => {
       searchQuery: queryParams.searchQuery.toString(),
       userId: queryParams.userId.toString(),
     }
+
+    console.log("filterParams", filterParams)
 
     const apiKeys = await apiKeysConroller.getList(filterParams, {
       field: queryParams.field as string,
