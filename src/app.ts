@@ -225,8 +225,8 @@ app.post(routes.admin.apiKeys.delete, async (req, res) => {
 app.get(routes.admin.apiKeys.getAll, async (req, res) => {
   const queryParams = req.query
   try {
-    const apiKey = await apiKeysConroller.getAll(queryParams.userId.toString())
-    res.json({ apiKey })
+    const apiKeys = await apiKeysConroller.getAll(queryParams.userId.toString())
+    res.json({ apiKeys })
   } catch (e) {
     res.json({ error: e })
   }
