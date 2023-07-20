@@ -12,13 +12,15 @@ export const getFilter = (queryFilterParams: IQueryFilterParams) => {
         value !== undefined
     )
     .reduce((acc, [key, value]) => {
-      let operator
+      let operator = "$eq"
       if (value !== null && value !== undefined) {
         if (arrayFields.indexOf(key) > -1) {
           operator = "$in"
           value = JSON.parse(value)
         } else {
-          operator = "$eq"
+          if (key === "searchQuery") {
+            operator = "$search"
+          }
         }
 
         const fieldName = key === "searchQuery" ? "login" : key
