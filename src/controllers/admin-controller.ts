@@ -63,6 +63,8 @@ class AdminController {
     login = login.toLowerCase()
     const user = dbConnector.users.findOne({ login })
 
+    console.log('login', login)
+    console.log('user', user)
     if (user) {
       throw new Error("user already exist")
     }
