@@ -30,9 +30,9 @@ class ApiKeysController {
     return dbConnector.apiKeys.insertOne({ name, value: apiKey, userId })
   }
 
-  // async getAll(userId: string) {
-  //   return dbConnector.apiKeys.find({ userId }).toArray()
-  // }
+  async getAll(userId: string) {
+    return dbConnector.apiKeys.find({ userId }).toArray()
+  }
 
   async getList(
     queryFilterParams: IQueryFilterParamsApiKeys = {

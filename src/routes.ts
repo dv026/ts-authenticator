@@ -26,6 +26,7 @@ export const routes = {
     apiKeys: {
       get: "/admin/api-keys",
       delete: "/admin/api-keys",
+      getAll: "/admin/api-keys/all",
     },
   },
   email: {
