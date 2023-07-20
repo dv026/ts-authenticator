@@ -230,7 +230,7 @@ app.get(routes.admin.apiKeys.get, async (req, res) => {
       // TODO: check types
       currentPage: parseInt(queryParams.currentPage.toString()),
       pageSize: parseInt(queryParams.pageSize.toString()),
-      searchQuery: queryParams.searchQuery.toString(),
+      searchQuery: queryParams.searchQuery?.toString(),
       userId: queryParams.userId.toString(),
     }
 
