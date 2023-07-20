@@ -19,7 +19,7 @@ export const getFilter = (queryFilterParams: IQueryFilterParams) => {
           value = JSON.parse(value)
         } else {
           if (key === "searchQuery") {
-            operator = "$search"
+            operator = "$regex"
           }
         }
 
