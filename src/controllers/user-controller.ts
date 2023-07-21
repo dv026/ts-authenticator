@@ -27,9 +27,7 @@ class UserController {
       [querySortParams?.field]: querySortParams?.direction,
     }
 
-    const filter = getFilter(queryFilterParams)
-
-    console.log("filter", filter)
+    const filter = getFilter<IQueryFilterParamsUser>(queryFilterParams, "login")
 
     return await dbConnector.users
       .find(filter)
