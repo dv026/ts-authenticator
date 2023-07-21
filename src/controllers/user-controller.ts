@@ -29,6 +29,8 @@ class UserController {
 
     const filter = getFilter(queryFilterParams)
 
+    console.log("filter", filter)
+
     return await dbConnector.users
       .find(filter)
       .skip((queryFilterParams.currentPage - 1) * queryFilterParams.pageSize)
