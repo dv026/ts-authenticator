@@ -26,7 +26,7 @@ class ApiKeysController {
   }
 
   async create(name: string, userId: string) {
-    const apiKey = dbConnector.apiKeys.findOne({ name })
+    const apiKey = await dbConnector.apiKeys.findOne({ name })
     if (apiKey) {
       throw new Error("API KEY already exists")
     }
