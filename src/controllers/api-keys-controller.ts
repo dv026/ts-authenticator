@@ -73,7 +73,7 @@ class ApiKeysController {
 
   async deleteMany(ids: string[]) {
     const objectIds = ids.map((id) => new ObjectId(id))
-    return await dbConnector.users.deleteMany({ _id: { $in: objectIds } })
+    return await dbConnector.apiKeys.deleteMany({ _id: { $in: objectIds } })
   }
 }
 
