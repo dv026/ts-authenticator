@@ -145,7 +145,7 @@ app.get(routes.admin.user.get, async (req, res) => {
 app.post(routes.admin.users.delete, async (req, res) => {
   const { ids } = req.body
   try {
-    await userController.deleteUsers(ids)
+    await userController.deleteMany(ids)
     res.json("Users're been deleted")
   } catch (e) {
     res.json({ error: e })

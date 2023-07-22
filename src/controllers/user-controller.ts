@@ -54,7 +54,7 @@ class UserController {
     )
   }
 
-  async deleteUsers(ids: string[]) {
+  async deleteMany(ids: string[]) {
     const objectIds = ids.map((id) => new ObjectId(id))
     return await dbConnector.users.deleteMany({ _id: { $in: objectIds } })
   }

@@ -9,7 +9,7 @@ export const routes = {
   admin: {
     users: {
       get: "/admin/users",
-      delete: "/admin/users",
+      delete: "/admin/users/delete-many",
     },
     user: {
       delete: "/admin/user/:id",
@@ -25,7 +25,7 @@ export const routes = {
     },
     apiKeys: {
       get: "/admin/api-keys",
-      delete: "/admin/api-keys",
+      delete: "/admin/api-keys/delete-many",
       getAll: "/admin/api-keys/all",
     },
   },
