@@ -26,8 +26,12 @@ class ApiKeysController {
   }
 
   async create(name: string, userId: string) {
-    const apiKey = randomstring.generate(24)
-    return dbConnector.apiKeys.insertOne({ name, value: apiKey, userId })
+    const apiKey = dbConnector.apiKeys.findOne({ name })
+    if (apiKey) {
+      throw new Error("API KEY already exists")
+    }
+    const randomKey = randomstring.generate(24)
+    return dbConnector.apiKeys.insertOne({ name, value: randomKey, userId })
   }
 
   async getAll(userId: string) {
